@@ -38,6 +38,23 @@ int random_sized(int argc, char ** argv)
 }
 
 static
+int random_verbose(int argc, char ** argv)
+{
+    if (argc <= 4) {
+        printf("Please provide seed, number of actions, low size and high size\n");
+        return 1;
+    }
+
+    uint32_t lo, hi, seed, actions;
+    sscanf(argv[1], "%d", &seed);
+    sscanf(argv[2], "%d", &actions);
+    sscanf(argv[3], "%d", &lo);
+    sscanf(argv[4], "%d", &hi);
+    benchmark_random(seed, lo, hi, actions);
+    return 0;
+}
+
+static
 int vector_push(int argc, char ** argv)
 {
     uint32_t amount = 4096;
@@ -70,8 +87,9 @@ const command cmds[] =
 {
     {"random-sm", "[seed (dec)] [num actions]", "random small (1B - 128B) allocations", random_sized},
     {"random-lg", "[seed (dec)] [num actions]", "random large (256B - 4KB) allocations", random_sized},
+    {"random", "<seed (dec)> <num actions> <low> <high>", "random (low B- high B) allocations", random_verbose},
     {"vector", "[num pushes (def 4096)]", "Pushes random ints into libbtn's vector", vector_push},
-    {"fixed", "[size (def 64)] [num mallocs (def 1024)]", "Allocates fixed sizes", fixed_alloc},
+    {"fixed", "[size (def 64)] [num mallocs (def 1024)]", "Allocates fixed sizes then frees them", fixed_alloc},
 };
 
 
