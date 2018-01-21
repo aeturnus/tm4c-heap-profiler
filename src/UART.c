@@ -133,7 +133,11 @@ int fputc(int ch, FILE *f){
 
 // Get a character from UART.
 int fgetc(FILE *f){
-  return UART_InChar();
+  int c = UART_InChar();
+  if (c == '\r')
+      c = '\n';
+  fputc(c, stdout);
+  return c;
 }
 
 // Function called when file error occurs.
