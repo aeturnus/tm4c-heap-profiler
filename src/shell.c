@@ -9,6 +9,10 @@
 
 int cmd_help(int argc, char ** argv);
 int cmd_echo(int argc, char ** argv);
+int cmd_set_impl(int argc, char ** argv);
+int cmd_stats(int argc, char ** argv);
+int cmd_reset(int argc, char ** argv);
+int cmd_benchmark(int argc, char ** argv);
 
 // shell stuff
 
@@ -16,7 +20,7 @@ int cmd_echo(int argc, char ** argv);
 
 typedef struct _command
 {
-    const char * cmd;
+    const char * cmd;   // blank cmd is a line skip in the help print
     const char * args;
     const char * desc;
     int (* func) (int argc, char ** argv);
@@ -26,7 +30,24 @@ const command cmds[] =
 {
     {"help", "", "Prints this prompt", cmd_help},
     {"echo", "<string>", "Echoes string to console", cmd_echo},
+    {"set-impl", "<implementation>", "Sets the allocator implementation. Will reset heap and stats.", cmd_set_impl},
+    {"stats", "", "Print name and stats of current implementation since last set", cmd_stats},
+    {"reset", "", "Reinitializes the heap of the current implementation", cmd_reset},
+    {"benchmark", "<benchmark name>", "Runs a benchmark. Resets the heap before hand.", cmd_benchmark},
 };
+
+int cmd_stats(int argc, char ** argv)
+{
+    malloc_stats();
+    return 0;
+}
+
+int cmd_reset(int argc, char ** argv)
+{
+    malloc_reset();
+    puts("Reset current implementation");
+    return 0;
+}
 
 int cmd_help(int argc, char ** argv)
 {

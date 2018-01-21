@@ -71,7 +71,7 @@ const heap_ops knuth_ops =
 };
 allocator knuth_allocator =
 {
-    .name = "Brandon",
+    .name = "Brandon's Knuth",
     .desc = "Knuth heap with embedded free list",
     .ops = &knuth_ops
 };
@@ -117,8 +117,8 @@ void allocator_init(allocator * a)
     a->free.t = 0;
 }
 
-allocator * alloc = NULL;
-
+static allocator * alloc = NULL;
+static heap_impl curr_impl;
 void malloc_init(heap_impl impl)
 {
     switch(impl)
@@ -131,6 +131,7 @@ void malloc_init(heap_impl impl)
         break;
     }
     allocator_init (alloc);
+    curr_impl = impl;
 }
 
 static inline
@@ -205,7 +206,7 @@ void free(void * ptr)
     alloc->free.n += 1;
 }
 
-void print_stats(void)
+void malloc_stats(void)
 {
     printf("Allocator: %s\n", alloc->name);
     printf("%d mallocs, %d frees, %d callocs, %d reallocs\n",
@@ -214,4 +215,9 @@ void print_stats(void)
     printf("Average free time: %d cycles\n", alloc->free.t / alloc->free.n);
     printf("Average calloc time: %d cycles\n", alloc->calloc.t / alloc->calloc.n);
     printf("Average realloc time: %d cycles\n", alloc->realloc.t / alloc->realloc.n);
+}
+
+void malloc_reset(void)
+{
+    malloc_init(curr_impl);
 }

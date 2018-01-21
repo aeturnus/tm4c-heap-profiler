@@ -487,6 +487,21 @@
             </File>
           </Files>
         </Group>
+        <Group>
+          <GroupName>Commands</GroupName>
+          <Files>
+            <File>
+              <FileName>set_impl.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\commands\set_impl.c</FilePath>
+            </File>
+            <File>
+              <FileName>benchmark.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\commands\benchmark.c</FilePath>
+            </File>
+          </Files>
+        </Group>
       </Groups>
     </Target>
   </Targets>
