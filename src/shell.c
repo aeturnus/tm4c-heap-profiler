@@ -3,6 +3,7 @@
 #include <stddef.h>
 #include <string.h>
 #include <malloc.h>
+#include <command.h>
 
 #define BUFFER_SIZE 256
 
@@ -18,14 +19,7 @@ int cmd_benchmark(int argc, char ** argv);
 
 #define ARRAY_LEN(x) (sizeof(x)/sizeof(x[0]))
 
-typedef struct _command
-{
-    const char * cmd;   // blank cmd is a line skip in the help print
-    const char * args;
-    const char * desc;
-    int (* func) (int argc, char ** argv);
-} command;
-
+static
 const command cmds[] =
 {
     {"help", "", "Prints this prompt", cmd_help},
@@ -52,11 +46,7 @@ int cmd_reset(int argc, char ** argv)
 int cmd_help(int argc, char ** argv)
 {
     printf("Heap profiler commands:\n");
-    for (int i = 0; i < ARRAY_LEN(cmds); ++i) {
-        const command * cmd = &cmds[i];
-        printf("    %s %s : %s\n", cmd->cmd, cmd->args, cmd->desc);
-    }
-    printf("\n");
+    print_commands(cmds, ARRAY_LEN(cmds));
     return 0;
 }
 
