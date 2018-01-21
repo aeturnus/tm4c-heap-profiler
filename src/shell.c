@@ -103,13 +103,21 @@ int parse(char * buffer)
     return -1;
 }
 
-void shell(void)
+static char buffer[BUFFER_SIZE];
+void repl(void)
 {
-    static char buffer[BUFFER_SIZE];
-    printf("Use \"help\" to list commands\n\n");
-    while (1) {
+    int run = 1;
+    while (run) {
         prompt();
         read_line(buffer);
         parse(buffer);
     }
+}
+
+void shell(void)
+{
+    
+    puts("Use \"help\" to list commands\n");
+    
+    repl();
 }

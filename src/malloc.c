@@ -182,13 +182,13 @@ void * calloc(size_t nmemb, size_t size)
     return ptr;
 }
 
-void * realloc(void * p, size_t size)
+void * realloc(void * ptr, size_t size)
 {
     uint32_t start = 0;
     uint32_t end = 0;
     void * (* f) (void *, size_t) = alloc->ops->realloc;
     start = start_timer();
-    void * ptr = f(ptr, size);
+    ptr = f(ptr, size);
     end = stop_timer();
     alloc->realloc.t += diff_timer(start, end);
     alloc->realloc.n += 1;
