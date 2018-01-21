@@ -32,7 +32,7 @@ int random_sized(int argc, char ** argv)
     printf("Running random allocation benchmark:\n");
     printf("Seed: %d (0x%08X) \n", seed, seed);
     printf("Allocation sizes: %d to %d bytes:\n", lo, hi);
-    printf("Number of functions called: %d \n", actions);
+    printf("Number of repeated alloc/dealloc: %d \n", actions);
     benchmark_random(seed, lo, hi, actions);
     return 0;
 }
@@ -85,9 +85,9 @@ int fixed_alloc(int argc, char ** argv)
 static
 const command cmds[] =
 {
+    {"random", "<seed (dec)> <num actions> <low> <high>", "random (low B- high B) allocations", random_verbose},
     {"random-sm", "[seed (dec)] [num actions]", "random small (1B - 128B) allocations", random_sized},
     {"random-lg", "[seed (dec)] [num actions]", "random large (256B - 4KB) allocations", random_sized},
-    {"random", "<seed (dec)> <num actions> <low> <high>", "random (low B- high B) allocations", random_verbose},
     {"vector", "[num pushes (def 4096)]", "Pushes random ints into libbtn's vector", vector_push},
     {"fixed", "[size (def 64)] [num mallocs (def 1024)]", "Allocates fixed sizes then frees them", fixed_alloc},
 };

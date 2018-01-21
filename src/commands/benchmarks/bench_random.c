@@ -94,22 +94,31 @@ void benchmark_random(uint32_t seed, uint32_t size_low, uint32_t size_high, uint
         uint32_t r = rand() % 2;
         
         if ((r == 0 || mallocs == frees) && mallocs - frees < PTRS) {
+            uint32_t tries = rand_range(1,16);
             // malloc if 0, or no allocations, or too many allocations
-            uint32_t ptr_idx = find_empty_ptr(ptrs);
-            uint32_t size = rand_range(size_low, size_high);
-            size = (size > 0) ? size : 1;
-            void * ptr = malloc(size);
-            
-            if (ptr != NULL) {
-                ptrs[ptr_idx] = ptr;
-                ++mallocs;
+            while (tries > 0 && mallocs - frees < PTRS) {
+                uint32_t ptr_idx = find_empty_ptr(ptrs);
+                uint32_t size = rand_range(size_low, size_high);
+                size = (size > 0) ? size : 1;
+                void * ptr = malloc(size);
+                
+                if (ptr != NULL) {
+                    ptrs[ptr_idx] = ptr;
+                    ++mallocs;
+                }
+                tries--;
             }
         } else {
-            uint32_t ptr_idx = find_taken_ptr(ptrs);
-            void * ptr = ptrs[ptr_idx];
-            free(ptr);
-            ptrs[ptr_idx] = NULL;
-            ++frees;
+            uint32_t tries = rand_range(1,16);
+            while (tries > 0 && mallocs > frees) {
+                uint32_t ptr_idx = find_taken_ptr(ptrs);
+                void * ptr = ptrs[ptr_idx];
+                free(ptr);
+                ptrs[ptr_idx] = NULL;
+                ++frees;
+
+                tries--;
+            }
         }
     }
 }
