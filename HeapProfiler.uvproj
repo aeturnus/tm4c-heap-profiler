@@ -507,6 +507,16 @@
             </File>
           </Files>
         </Group>
+        <Group>
+          <GroupName>Benchmarks</GroupName>
+          <Files>
+            <File>
+              <FileName>bench_random.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\commands\benchmarks\bench_random.c</FilePath>
+            </File>
+          </Files>
+        </Group>
       </Groups>
     </Target>
   </Targets>

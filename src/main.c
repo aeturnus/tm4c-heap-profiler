@@ -7,6 +7,7 @@
 #include "SysTick.h"
 #include "malloc.h"
 #include "heap.h"
+#include "Random.h"
 
 void init_systick(void)
 {
@@ -25,6 +26,7 @@ int main(void)
     UART_Init();              // initialize UART
     init_systick();
     malloc_init(IMPL_BRANDON_KNUTH);
+    Random_Init(0xDEADBEEF);
     
     printf("\n====================================\n");
     printf("Dynamic memory allocation profiler\n");
