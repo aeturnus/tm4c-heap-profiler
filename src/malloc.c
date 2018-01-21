@@ -38,7 +38,7 @@ typedef struct _allocator
 struct knuth knuth;
 void shim_knuth_init(void)
 {
-    knuth_init(&knuth, heap_mem, MALLOC_SIZE);
+    knuth_init(&knuth, heap_mem, MALLOC_SIZE, 2);
 }
 
 void * shim_knuth_malloc(size_t size)

@@ -81,7 +81,6 @@ void benchmark_random(uint32_t seed, uint32_t size_low, uint32_t size_high, uint
 {
     rand_set_state(seed);
     set_find_taken_seed(~seed);
-    malloc_reset();
     
     static void * ptrs[PTRS];
     for (int i = 0; i < PTRS; ++i) {

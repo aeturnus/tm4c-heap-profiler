@@ -515,6 +515,11 @@
               <FileType>1</FileType>
               <FilePath>.\src\commands\benchmarks\bench_random.c</FilePath>
             </File>
+            <File>
+              <FileName>bench_vector.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\commands\benchmarks\bench_vector.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
