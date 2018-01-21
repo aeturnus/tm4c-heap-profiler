@@ -362,7 +362,7 @@
               <MiscControls>--C99</MiscControls>
               <Define>rvmdk PART_TM4C1294NCPDT CHIP_NAME="TM4C1294"</Define>
               <Undefine></Undefine>
-              <IncludePath>..;..\..\..;.\inc;.\external\allocators\inc</IncludePath>
+              <IncludePath>..;..\..\..;.\inc;.\external\allocators\inc;.\external\libbtn\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -454,6 +454,36 @@
               <FileName>knuth.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\external\allocators\src\knuth.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>libbtn</GroupName>
+          <Files>
+            <File>
+              <FileName>bst.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\external\libbtn\src\bst.c</FilePath>
+            </File>
+            <File>
+              <FileName>container.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\external\libbtn\src\container.c</FilePath>
+            </File>
+            <File>
+              <FileName>cstr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\external\libbtn\src\cstr.c</FilePath>
+            </File>
+            <File>
+              <FileName>tokenizer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\external\libbtn\src\tokenizer.c</FilePath>
+            </File>
+            <File>
+              <FileName>vector.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\external\libbtn\src\vector.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -1,3 +1,6 @@
 [submodule "external/allocators"]
 	path = external/allocators
 	url = https://github.com/aeturnus/allocators
+[submodule "external/libbtn"]
+	path = external/libbtn
+	url = https://github.com/aeturnus/libbtn
