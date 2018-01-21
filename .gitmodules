@@ -1,0 +1,3 @@
+[submodule "external/allocators"]
+	path = external/allocators
+	url = https://github.com/aeturnus/allocators

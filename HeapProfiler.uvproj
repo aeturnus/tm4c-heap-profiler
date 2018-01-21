@@ -360,9 +360,9 @@
             <useXO>0</useXO>
             <VariousControls>
               <MiscControls>--C99</MiscControls>
-              <Define>rvmdk PART_TM4C1294NCPDT</Define>
+              <Define>rvmdk PART_TM4C1294NCPDT CHIP_NAME="TM4C1294"</Define>
               <Undefine></Undefine>
-              <IncludePath>..;..\..\..;.\inc</IncludePath>
+              <IncludePath>..;..\..\..;.\inc;.\external\allocators\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -411,11 +411,6 @@
               <FilePath>.\src\heap.c</FilePath>
             </File>
             <File>
-              <FileName>knuth.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\knuth.c</FilePath>
-            </File>
-            <File>
               <FileName>main.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\main.c</FilePath>
@@ -444,6 +439,21 @@
               <FileName>Random.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\Random.c</FilePath>
+            </File>
+            <File>
+              <FileName>shell.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\shell.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Allocators</GroupName>
+          <Files>
+            <File>
+              <FileName>knuth.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\external\allocators\src\knuth.c</FilePath>
             </File>
           </Files>
         </Group>
