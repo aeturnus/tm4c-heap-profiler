@@ -32,7 +32,7 @@ const command cmds[] =
 
 int cmd_stats(int argc, char ** argv)
 {
-    malloc_stats();
+    malloc_print_stats();
     return 0;
 }
 

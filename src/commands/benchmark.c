@@ -121,7 +121,7 @@ int cmd_benchmark(int argc, char ** argv)
 
     int ret = 0;
     if (ran) {
-        malloc_stats();
+        malloc_print_stats();
     } else {
         ret = 1;
         printf("Unrecognized benchmark: \"%s\"\n", argv[1]);

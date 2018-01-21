@@ -16,22 +16,14 @@ typedef struct _heap_ops
     void (* free) (void * ptr);
 } heap_ops;
 
-typedef struct _stat
-{
-    uint32_t t; // total time
-    uint32_t n; // count
-} stat;
+
 
 typedef struct _allocator
 {
     const char * name;
     const char * desc;
     const heap_ops * ops;
-    // stats
-    stat malloc;
-    stat calloc;
-    stat free;
-    stat realloc;
+    heap_stats stats;
 } allocator;
 
 // Knuth shims
@@ -105,16 +97,20 @@ allocator val_allocator =
 };
 //
 
+void stat_init(heap_stat * stat)
+{
+    stat->sn = 0;
+    stat->fn = 0;
+    stat->st = 0;
+    stat->ft = 0;
+}
+
 void allocator_init(allocator * a)
 {
-    a->malloc.n = 0;
-    a->malloc.t = 0;
-    a->calloc.n = 0;
-    a->calloc.t = 0;
-    a->realloc.n = 0;
-    a->realloc.t = 0;
-    a->free.n = 0;
-    a->free.t = 0;
+    stat_init(&a->stats.malloc);
+    stat_init(&a->stats.realloc);
+    stat_init(&a->stats.calloc);
+    stat_init(&a->stats.free);
 }
 
 static allocator * alloc = NULL;
@@ -164,8 +160,15 @@ void * malloc(size_t size)
     start = start_timer();
     void * ptr = f(size);
     end = stop_timer();
-    alloc->malloc.t += diff_timer(start, end);
-    alloc->malloc.n += 1;
+    
+    if (ptr != NULL) {
+        alloc->stats.malloc.st += diff_timer(start, end);
+        alloc->stats.malloc.sn += 1;
+    } else {
+        alloc->stats.malloc.ft += diff_timer(start, end);
+        alloc->stats.malloc.fn += 1;
+    }
+
     return ptr;
 }
 
@@ -177,8 +180,14 @@ void * calloc(size_t nmemb, size_t size)
     start = start_timer();
     void * ptr = f(nmemb, size);
     end = stop_timer();
-    alloc->calloc.t += diff_timer(start, end);
-    alloc->calloc.n += 1;
+    
+    if (ptr != NULL) {
+        alloc->stats.calloc.st += diff_timer(start, end);
+        alloc->stats.calloc.sn += 1;
+    } else {
+        alloc->stats.calloc.ft += diff_timer(start, end);
+        alloc->stats.calloc.fn += 1;
+    }
     return ptr;
 }
 
@@ -190,8 +199,14 @@ void * realloc(void * ptr, size_t size)
     start = start_timer();
     ptr = f(ptr, size);
     end = stop_timer();
-    alloc->realloc.t += diff_timer(start, end);
-    alloc->realloc.n += 1;
+    
+    if (ptr != NULL) {
+        alloc->stats.realloc.st += diff_timer(start, end);
+        alloc->stats.realloc.sn += 1;
+    } else {
+        alloc->stats.realloc.ft += diff_timer(start, end);
+        alloc->stats.realloc.fn += 1;
+    }
     return ptr;
 }
 
@@ -203,19 +218,38 @@ void free(void * ptr)
     start = start_timer();
     f(ptr);
     end = stop_timer();
-    alloc->free.t += diff_timer(start, end);
-    alloc->free.n += 1;
+    
+    alloc->stats.free.st += diff_timer(start, end);
+    alloc->stats.free.sn += 1;
 }
 
-void malloc_stats(void)
+heap_stats malloc_stats(void)
+{
+    return alloc->stats;
+}
+
+void malloc_print_stats(void)
 {
     printf("Allocator: %s\n", alloc->name);
-    printf("%d mallocs, %d frees, %d callocs, %d reallocs\n",
-           alloc->malloc.n, alloc->free.n, alloc->calloc.n, alloc->realloc.n);
-    printf("Average malloc time: %d cycles\n", alloc->malloc.t / alloc->malloc.n);
-    printf("Average free time: %d cycles\n", alloc->free.t / alloc->free.n);
-    printf("Average calloc time: %d cycles\n", alloc->calloc.t / alloc->calloc.n);
-    printf("Average realloc time: %d cycles\n", alloc->realloc.t / alloc->realloc.n);
+    heap_stats_print(&alloc->stats);
+}
+
+void heap_stats_print(const heap_stats * stats)
+{
+    printf("Successful %d mallocs, %d frees, %d callocs, %d reallocs\n",
+           stats->malloc.sn, stats->free.sn, stats->calloc.sn, stats->realloc.sn);
+    printf("Failed %d mallocs, %d frees, %d callocs, %d reallocs\n",
+           stats->malloc.fn, stats->free.fn, stats->calloc.fn, stats->realloc.fn);
+    puts("");
+    printf("Avg. successful malloc time: %d cycles\n", stats->malloc.st / stats->malloc.sn);
+    printf("Avg. successful free time: %d cycles\n", stats->free.st / stats->free.sn);
+    printf("Avg. successful calloc time: %d cycles\n", stats->calloc.st / stats->calloc.sn);
+    printf("Avg. successful realloc time: %d cycles\n", stats->realloc.st / stats->realloc.sn);
+    puts("");
+    printf("Avg. failed malloc time: %d cycles\n", stats->malloc.ft / stats->malloc.fn);
+    printf("Avg. failed free time: %d cycles\n", stats->free.ft / stats->free.fn);
+    printf("Avg. failed calloc time: %d cycles\n", stats->calloc.ft / stats->calloc.fn);
+    printf("Avg. failed realloc time: %d cycles\n", stats->realloc.ft / stats->realloc.fn);
 }
 
 void malloc_reset(void)
