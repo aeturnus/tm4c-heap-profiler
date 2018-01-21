@@ -5,8 +5,7 @@
 #include <malloc.h>
 #include <command.h>
 
-void benchmark_random(uint32_t seed, uint32_t size_low, uint32_t size_high, uint32_t actions);
-void benchmark_vector(uint32_t actions);
+#include "benchmarks/benchmarks.h"
 
 #define DEFAULT_SEED 0xDEADBEEF
 #define DEFAULT_ACTIONS (1 << 12)
@@ -49,6 +48,21 @@ int vector_push(int argc, char ** argv)
     benchmark_vector(amount);
 }
 
+static
+int fixed_alloc(int argc, char ** argv)
+{
+    uint32_t size = 64;
+    uint32_t amount = 1024;
+    if (argc >= 2) {
+        sscanf(argv[1], "%d", &size);
+        if (argc >= 2) {
+            sscanf(argv[2], "%d", &amount);
+        }
+    }
+
+    benchmark_fixed(size, amount);
+}
+
 #define ARRAY_LEN(x) (sizeof(x)/sizeof(x[0]))
 
 static
@@ -57,6 +71,7 @@ const command cmds[] =
     {"random-sm", "[seed (dec)] [num actions]", "random small (1B - 128B) allocations", random_sized},
     {"random-lg", "[seed (dec)] [num actions]", "random large (256B - 4KB) allocations", random_sized},
     {"vector", "[num pushes (def 4096)]", "Pushes random ints into libbtn's vector", vector_push},
+    {"fixed", "[size (def 64)] [num mallocs (def 1024)]", "Allocates fixed sizes", fixed_alloc},
 };
 
 

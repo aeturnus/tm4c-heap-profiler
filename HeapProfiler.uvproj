@@ -516,9 +516,9 @@
               <FilePath>.\src\commands\benchmarks\bench_random.c</FilePath>
             </File>
             <File>
-              <FileName>bench_vector.c</FileName>
+              <FileName>bench_assorted.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\src\commands\benchmarks\bench_vector.c</FilePath>
+              <FilePath>.\src\commands\benchmarks\bench_assorted.c</FilePath>
             </File>
           </Files>
         </Group>
