@@ -131,6 +131,7 @@ void malloc_init(heap_impl impl)
         break;
     }
     allocator_init (alloc);
+    alloc->ops->init();
     curr_impl = impl;
 }
 
