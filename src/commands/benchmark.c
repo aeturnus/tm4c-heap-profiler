@@ -80,6 +80,12 @@ int fixed_alloc(int argc, char ** argv)
     benchmark_fixed(size, amount);
 }
 
+static
+int tokenizer_case(int argc, char ** argv)
+{
+    benchmark_tokenize();
+}
+
 #define ARRAY_LEN(x) (sizeof(x)/sizeof(x[0]))
 
 static
@@ -90,6 +96,7 @@ const command cmds[] =
     {"random-lg", "[seed (dec)] [num actions]", "random large (256B - 4KB) allocations", random_sized},
     {"vector", "[num pushes (def 4096)]", "Pushes random ints into libbtn's vector", vector_push},
     {"fixed", "[size (def 64)] [num mallocs (def 1024)]", "Allocates fixed sizes then frees them", fixed_alloc},
+    {"tokenize", "", "String tokenizer use case", tokenizer_case},
 };
 
 
