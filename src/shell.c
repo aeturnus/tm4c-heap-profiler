@@ -5,7 +5,7 @@
 #include <malloc.h>
 #include <command.h>
 
-#define BUFFER_SIZE 256
+#define BUFFER_SIZE 128
 
 
 int cmd_help(int argc, char ** argv);
@@ -60,13 +60,110 @@ int cmd_echo(int argc, char ** argv)
     return 0;
 }
 
+typedef enum _ansi_code
+{
+    ANSI_NONE,
+    ANSI_UP,
+    ANSI_DOWN,
+    ANSI_FORWARD,
+    ANSI_BACKWARD
+} ansi_code;
+
+// interpret ansi coming in
+static
+ansi_code interpret_ansi(void)
+{
+    char c = fgetc(stdin);
+    if (c != '[')
+        return ANSI_NONE;
+    
+    c = fgetc(stdin);
+    switch (c) {
+    case 'A':
+        return ANSI_UP;
+    case 'B':
+        return ANSI_DOWN;
+    case 'C':
+        return ANSI_FORWARD;
+    case 'D':
+        return ANSI_BACKWARD;
+    }
+    
+    return ANSI_NONE;
+}
+
+#define HISTORY_SIZE 16
+
+static char history[HISTORY_SIZE][BUFFER_SIZE];
+static int put_idx = 0;
+static int put_cnt = 0;
+
+#define off(x, n) ((x + n) % HISTORY_SIZE)
+
+static
+void push_buffer(char * buffer)
+{
+    strcpy(history[put_idx], buffer);
+    put_idx = off(put_idx, +1);
+    put_cnt++;
+}
+
+static
+void get_buffer(int offset, char * buffer)
+{
+    int idx = off(put_idx, -offset-1);
+    strcpy(buffer, history[idx]);
+}
+
+static
+void backspace(int amt)
+{
+    for (; amt > 0; --amt) {
+        fputc(0x7F, stdout);
+    }
+}
+
 static
 void read_line(char * buffer)
 {
+    // form circular buffer
+    int history_pos = -1;
+    
     size_t pos = 0;
     char c;
     do {
         c = fgetc(stdin);
+        
+        if (c == 0x1B) {
+            ansi_code code = interpret_ansi();
+            
+            if (code == ANSI_UP) {
+                ++history_pos;
+                if (history_pos < HISTORY_SIZE && history_pos < put_cnt) {
+                    backspace(pos);
+                    get_buffer(history_pos, buffer);
+                    pos = strlen(buffer);
+                    printf("%s", buffer);
+                } else {
+                    --history_pos;
+                }
+            } else if (code == ANSI_DOWN) {
+                --history_pos;
+                if (history_pos >= 0) {
+                    backspace(pos);
+                    get_buffer(history_pos, buffer);
+                    pos = strlen(buffer);
+                    printf("%s", buffer);
+                } else if (history_pos == -1) {
+                    backspace(pos);
+                    pos = 0;
+                    buffer[pos] = '\0';
+                } else {
+                    history_pos = -1;
+                }
+            }
+            continue;
+        }
         
         if (c == '\n')
             break;
@@ -83,6 +180,7 @@ void read_line(char * buffer)
     buffer[pos] = '\0';
     
     fputc('\n', stdout);
+    push_buffer(buffer);
 }
 
 static
