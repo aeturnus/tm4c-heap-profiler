@@ -136,7 +136,6 @@ int fgetc(FILE *f){
   int c = UART_InChar();
   if (c == '\r')
       c = '\n';
-  fputc(c, stdout);
   return c;
 }
 

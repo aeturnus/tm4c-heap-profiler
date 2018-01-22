@@ -27,7 +27,7 @@ const command cmds[] =
     {"set-impl", "<implementation>", "Sets the allocator implementation. Will reset heap and stats.", cmd_set_impl},
     {"stats", "", "Print name and stats of current implementation since last set", cmd_stats},
     {"reset", "", "Reinitializes the heap of the current implementation", cmd_reset},
-    {"benchmark", "<benchmark name>", "Runs a benchmark. Resets the heap before hand.", cmd_benchmark},
+    {"bench", "<benchmark name>", "Runs a benchmark. Resets the heap before hand.", cmd_benchmark},
 };
 
 int cmd_stats(int argc, char ** argv)
@@ -67,17 +67,28 @@ void read_line(char * buffer)
     char c;
     do {
         c = fgetc(stdin);
+        
         if (c == '\n')
             break;
-        buffer[pos++] = c;
+        if (c == 0x7F) {
+            if (pos > 0) {
+                --pos;
+                fputc(c, stdout);
+            }
+        } else {
+            buffer[pos++] = c;
+            fputc(c, stdout);
+        }
     } while (pos < 255);
     buffer[pos] = '\0';
+    
+    fputc('\n', stdout);
 }
 
 static
 void prompt(void)
 {
-    printf("$ ");
+    printf("\n$ ");
 }
 
 static
