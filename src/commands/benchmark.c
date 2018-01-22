@@ -86,6 +86,12 @@ int tokenizer_case(int argc, char ** argv)
     benchmark_tokenize();
 }
 
+static
+int tokenizer_bst_case(int argc, char ** argv)
+{
+    benchmark_tokenize_bst();
+}
+
 #define ARRAY_LEN(x) (sizeof(x)/sizeof(x[0]))
 
 static
@@ -97,6 +103,7 @@ const command cmds[] =
     {"vector", "[num pushes (def 4096)]", "Pushes random ints into libbtn's vector", vector_push},
     {"fixed", "[size (def 64)] [num mallocs (def 1024)]", "Allocates fixed sizes then frees them", fixed_alloc},
     {"tokenize", "", "String tokenizer use case", tokenizer_case},
+    {"tokenize-bst", "", "String tokenizer with BST map", tokenizer_bst_case},
 };
 
 

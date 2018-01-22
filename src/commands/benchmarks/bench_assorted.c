@@ -10,6 +10,8 @@
 
 #include <btn/vector.h>
 #include <btn/tokenizer.h>
+#include <btn/bst.h>
+#include <btn/map.h>
 
 void benchmark_vector(uint32_t actions)
 {
@@ -59,5 +61,26 @@ void benchmark_tokenize(void)
     }
     free(tokens);
 
+    tokenizer_dtor(&tok);
+}
+
+void benchmark_tokenize_bst(void)
+{
+    puts("Tokenizing the \"Lorem ipsum\" and adding them to a BST");
+    tokenizer tok;
+    bst(const char *, uint32_t) map;
+    
+    tokenizer_ctor(&tok, lorem, " ");
+    bst_ctor(&map, sizeof(char *), sizeof(uint32_t), NULL, NULL, strcmp);
+ 
+    uint32_t n = 0;
+    const char * str = NULL;
+    while (tokenizer_has_tokens(&tok)) {
+        str = tokenizer_next(&tok);
+        map_insert(&map, &str, &n);
+        ++n;
+    }
+
+    bst_dtor(&map);
     tokenizer_dtor(&tok);
 }
